@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	_ "database/sql"
 	"fmt"
-	"log"
 
 	"github.com/boss959595/dbp/db"
 )
@@ -23,15 +22,14 @@ var con *sql.DB
 
 func GetEmployee() Employees {
 	con := db.CreateCon()
-	//db.CreateCon()
-	sqlStatement := "SELECT id,name,age,salary FROM employee order by id"
 
-	rows, err := con.Query(sqlStatement)
-	log.Println(rows)
-	fmt.Println(rows)
-	fmt.Println(err)
+	rows, err := con.Query("SELECT id,name,age,salary FROM employee order by id")
+
+	fmt.Println("row::", rows)
+	fmt.Println("err::", err)
 	if err != nil {
 		fmt.Println(err)
+		//fmt.Fatal("err")
 		//return c.JSON(http.StatusCreated, u)
 	}
 	defer rows.Close()
@@ -40,10 +38,10 @@ func GetEmployee() Employees {
 	for rows.Next() {
 		employee := Employee{}
 
-		err2 := rows.Scan(&employee.Id, &employee.Name, &employee.Salary, &employee.Age)
+		err := rows.Scan(&employee.Id, &employee.Name, &employee.Salary, &employee.Age)
 		// Exit if we get an error
-		if err2 != nil {
-			fmt.Print(err2)
+		if err != nil {
+			fmt.Print(err)
 		}
 		result.Employees = append(result.Employees, employee)
 	}

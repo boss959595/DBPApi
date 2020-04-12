@@ -7,23 +7,25 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-/*Create mysql connection*/
 func CreateCon() *sql.DB {
-	db, err := sql.Open("mysql", "root:@tcp(103.253.73.54:3306)/test")
-	if err != nil {
-		fmt.Println(err.Error())
-	} else {
-		fmt.Println("db is connected")
-	}
+	dbDriver := "mysql"
+	dbUser := "root"
+	dbPass := ""
+	dbName := "test"
+	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
+	checkErr(err)
+
 	//defer db.Close()
 	// make sure connection is available
 	err = db.Ping()
-	fmt.Println(err)
-	if err != nil {
-		fmt.Println("db is not connected")
-		fmt.Println(err.Error())
-	}
+	checkErr(err)
+	fmt.Printf("Connection successfully")
+
 	return db
 }
 
-/*end mysql connection*/
+func checkErr(err error) {
+	if err != nil {
+		fmt.Print(err.Error())
+	}
+}
